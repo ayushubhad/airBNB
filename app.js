@@ -11,6 +11,9 @@ const listing = require("./routes/listing.js");
 const review = require("./routes/review.js");
 const session = require("express-session");
 const flash = require("connect-flash");
+const passport = require("passport");
+const LocalStrategy = require("passport-local");
+const User= require("./models/user.js");
 
 
 const sessionOptions = 
@@ -34,7 +37,11 @@ app.get("/", (req,res)=>{
 
 app.use(session(sessionOptions));
 app.use(flash());
-
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
 app.use((req,res,next)=>
 {
@@ -43,6 +50,24 @@ app.use((req,res,next)=>
     next();
 
 })
+
+app.get("/demouser", async (req, res) => {
+    try {
+        const fakeUser = new User({
+            email: "student@gmail.com",
+            username: "demouser"
+        });
+
+      
+        const registeredUser = await User.register(fakeUser, "helloworld123");
+        
+        
+        res.send(registeredUser); 
+
+    } catch (err) {
+        res.send("Error: " + err.message);
+    }
+});
 
 main().then(()=>{console.log("connected to DB")})
 .catch((err)=>{
