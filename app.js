@@ -7,13 +7,14 @@ app.use(express.urlencoded({ extended: true }));
 const methodOverride= require("method-override");
 const ejsMate= require("ejs-mate");
 const ExpressError = require("./utils/ExpressError.js");
-const listing = require("./routes/listing.js");
-const review = require("./routes/review.js");
+const listingRouter = require("./routes/listing.js");
+const reviewRouter = require("./routes/review.js");
+const userRouter = require("./routes/user.js");
 const session = require("express-session");
 const flash = require("connect-flash");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
-const User= require("./models/user.js");
+const User = require("./models/user.js");
 
 
 const sessionOptions = 
@@ -51,6 +52,7 @@ app.use((req,res,next)=>
 
 })
 
+/*
 app.get("/demouser", async (req, res) => {
     try {
         const fakeUser = new User({
@@ -68,6 +70,7 @@ app.get("/demouser", async (req, res) => {
         res.send("Error: " + err.message);
     }
 });
+*/
 
 main().then(()=>{console.log("connected to DB")})
 .catch((err)=>{
@@ -87,9 +90,9 @@ app.use(express.static(path.join(__dirname, "/public")));
 
 
 
-app.use("/listings", listing);
-app.use("/listings/:id/reviews", review);
-
+app.use("/listings", listingRouter);
+app.use("/listings/:id/reviews", reviewRouter);
+app.use("/", userRouter);
 
 
 app.all("any", (req,res,next) => {
