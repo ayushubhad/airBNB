@@ -5,7 +5,8 @@
 
         
     <h3>Edit Listing</h3>
-    <form action="/listings/<%= listing._id %>?_method=PUT" method="POST" novalidate class="needs-validation">
+    <form action="/listings/<%= listing._id %>?_method=PUT" method="POST" novalidate class="needs-validation"
+        enctype="multipart/form-data">
        <div>
         <label for="title" class="form-label">Title</label>
          <input type="text" name="listing[title]" value="<%=listing.title  %>" class="form-control" required>
@@ -29,14 +30,12 @@
             <br>
         </div>
       <div>
-         <label for="image" class="form-label">Edit Image</label>
-          <input type="text" class="form-control" name="listing[image][url]" value="<%=listing.image.url%>" required>
+         <label for="image" class="form-label">Upload New Image</label>
+          <input type="file" class="form-control" name="listing[image][url]" >
           <div class="valid-feedback">
             Image looks great!
         </div>
-        <div class="invalid-feedback">
-                Enter a valid image url/link.
-            </div>
+
             <br>
       </div>
       <div class="row">
@@ -64,7 +63,7 @@
         </div>
        <div>
       </div>
-    
+       <div class="col-md-8">
         <label for="location" class="form-label">Enter Location</label>
          <input type="text" class="form-control" name="listing[location]" value="<%=listing.location  %>" required>
          <div class="valid-feedback">
@@ -73,6 +72,9 @@
         <div class="invalid-feedback">
                 Enter a valid location.
             </div>
+        </div>    
+
+
             <br>
        </div>
         <button class="btn btn-dark edit-btn mt-3 mb-4">Edit</button>
