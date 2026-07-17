@@ -126,3 +126,9 @@ body{
     height: 2.5rem;
     width: 5rem;
 }
+
+/*Map*/
+#map{
+    height: 400px;
+    width: 80vh;
+}

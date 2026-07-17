@@ -19,7 +19,9 @@ if(!listing){
     req.flash("error", "Listing Does Not Exists!");
      return res.redirect("/listings");
 }
-    res.render("listings/show.ejs", {listing});
+    res.render("listings/show.ejs", {listing,  mapToken: process.env.MAP_TOKEN}, 
+       
+    );
 
 }
 
@@ -66,7 +68,9 @@ module.exports.editListing = async (req,res)=>{
     req.flash("error", "Listing Does Not Exists!");
     return res.redirect("/listings");
 }
-    res.render("listings/edit.ejs", {listing})
+    let originalImageUrl = listing.image.url;
+    originalImageUrl= originalImageUrl.replace("/upload", "/upload/w_250");
+    res.render("listings/edit.ejs", {listing, originalImageUrl})
 }
 
 module.exports.deletelisting = async (req,res)=>{
