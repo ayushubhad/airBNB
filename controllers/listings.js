@@ -54,22 +54,39 @@ module.exports.createListing = async (req, res, next) => {
     res.redirect("/listings");
 };
 
-module.exports.updateLisitng = async(req,res)=>{
-    if(!req.body.listing){
+module.exports.updateLisitng = async (req, res) => {
+    if (!req.body.listing) {
         throw new ExpressError(400, "Send valid data for listing");
     }
-let {id}=req.params;
+    let { id } = req.params;
 
-let listing = await Listing.findByIdAndUpdate(id, {...req.body.listing});
-if(typeof req.file !== "undefined"){
-    let url = req.file.path;
-    let filename = req.file.filename;
-    listing.image = {url, filename};
-    await  listing.save();
-}
+    // 1. Update the basic text fields
+    let listing = await Listing.findByIdAndUpdate(id, { ...req.body.listing });
+
+    // 2. Fetch new coordinates based on the location
+    let response = await geocodingClient.forwardGeocode({
+        query: req.body.listing.location,
+        limit: 1
+    }).send();
+    
+    // 3. Apply the new coordinates if Mapbox found the location
+    if (response.body.features.length > 0) {
+        listing.geometry = response.body.features[0].geometry;
+    }
+
+    // 4. Update the image if a new file was uploaded
+    if (typeof req.file !== "undefined") {
+        let url = req.file.path;
+        let filename = req.file.filename;
+        listing.image = { url, filename };
+    }
+
+    // 5. CRITICAL: Save the changes to the database (moved outside the if-statement!)
+    await listing.save();
+
     req.flash("success", "Listing Updated!");
-res.redirect(`/listings/${id}`);
-}
+    res.redirect(`/listings/${id}`);
+};
 
 module.exports.editListing = async (req,res)=>{
      let {id} = req.params;

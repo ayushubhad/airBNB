@@ -1,11 +1,149 @@
 <% layout("/layouts/boilerplate") %>
 
 <body>
-    <h1>All listings</h1>
+   <!--  <h1>All listings</h1>
     <form action="/listings/new" method="GET">
-     <!--   <button>Create new Listing</button>  -->
+       <button>Create new Listing</button>  -->
 
-    <div class="row row-cols-lg-4 row-cols-md-3 row-cols-sm-1">
+  <style>
+    #filters {
+        display: flex;
+        flex-wrap: nowrap; /* Prevents wrapping to the next line */
+        overflow-x: auto;  /* Enables horizontal scrolling */
+        align-items: center;
+        gap: 2rem;
+        padding: 1rem 0;
+        margin-top: 1rem;
+        /* Hides scrollbar for Firefox */
+        scrollbar-width: none; 
+    }
+
+    /* Hides scrollbar for Chrome, Safari and Opera */
+    #filters::-webkit-scrollbar {
+        display: none;
+    }
+
+    .filter-item {
+        text-align: center;
+        opacity: 0.7;
+        text-decoration: none;
+        color: inherit;
+        transition: 0.2s ease;
+        flex: 0 0 auto; /* Ensures items don't shrink */
+    }
+
+    .filter-item:hover {
+        opacity: 1;
+        cursor: pointer;
+        border-bottom: 2px solid black;
+    }
+
+    .filter-item p {
+        font-size: 0.8rem;
+        margin-top: 0.5rem;
+    }
+    
+    .filter {
+    flex: 0 0 auto; /* Ensures the wrapper divs don't shrink */
+}
+</style>
+
+    <div id="filters">
+       <div class="filter">
+        <a href="/listings?category=Trending" class="filter-item">
+        <div><i class="fa-solid fa-fire"></i></div>
+        <p>Trending</p></a>
+       </div>
+   
+       <div class="filter">
+        <a href="/listings?category=Rooms" class="filter-item">
+        <div><i class="fa-solid fa-couch"></i></div>
+        <p>Rooms</p></a>
+       </div>
+
+       <div class="filter"><a href="/listings?category=Iconic-Cities" class="filter-item">
+        <div><i class="fa-solid fa-mountain-city"></i></div>
+        <p>Iconic Cities</p></a>
+       </div>
+
+       <div class="filter"><a href="/listings?category=Mountains" class="filter-item">
+        <div><i class="fa-solid fa-mountain"></i></div>
+        <p>Mountains</p></a>
+       </div>
+
+       <div class="filter"><a href="/listings?category=Castles" class="filter-item">
+        <div><i class="fa-brands fa-fort-awesome"></i></div>
+        <p>Castles</p></a>
+       </div>
+
+       <div class="filter"><a href="/listings?category=Pool" class="filter-item">
+        <div><i class="fa-solid fa-person-swimming"></i></div>
+        <p>Pool</p></a>
+       </div>
+
+       <div class="filter"><a href="/listings?category=Camping" class="filter-item">
+        <div><i class="fa-solid fa-tent"></i></div>
+        <p>Camping</p></a>
+       </div>
+
+       <div class="filter"><a href="/listings?category=Farms" class="filter-item">
+        <div><i class="fa-solid fa-tractor"></i></div>
+        <p>Farms</p></a>
+       </div>
+
+       <div class="filter"><a href="/listings?category=Arctic" class="filter-item">
+        <div><i class="fa-solid fa-snowflake"></i></div>
+        <p>Arctic</p></a>
+       </div>
+
+       <div class="filter"><a href="/listings?category=Beach" class="filter-item">
+        <div><i class="fa-solid fa-umbrella-beach"></i></div>
+        <p>Beach</p></a>
+       </div>
+
+       
+
+       <div class="filter"><a href="/listings?category=Vineyards" class="filter-item">
+        <div><i class="fa-solid fa-wine-bottle"></i></div>
+        <p>Vineyards</p></a>
+       </div>
+
+       <div class="filter"><a href="/listings?category=Kitchen" class="filter-item">
+        <div><i class="fa-solid fa-kitchen-set"></i></div>
+        <p>Kitchen</p></a>
+       </div>
+
+       <div class="filter"><a href="/listings?category=GameHUb" class="filter-item">
+        <div><i class="fa-solid fa-football"></i></div>
+        <p>GameHub</p></a>
+       </div>
+
+       <div class="filter"><a href="/listings?category=Nature" class="filter-item">
+        <div><i class="fa-solid fa-leaf"></i></div>
+        <p>Nature</p></a>
+       </div>
+
+       <div class="filter"><a href="/listings?category=Business" class="filter-item">
+        <div><i class="fa-brands fa-black-tie"></i></div>
+        <p>Business</p></a>
+       </div>
+
+       <div class="filter"><a href="/listings?category=Vacation" class="filter-item">
+        <div><i class="fa-solid fa-suitcase-rolling"></i></div>
+        <p>Vacation</p></a>
+       </div>
+
+       <div class="filter"><a href="/listings?category=Music" class="filter-item">
+        <div><i class="fa-solid fa-guitar"></i></div>
+        <p>Music</p></a>
+       </div>
+       
+
+    </div>
+    
+
+
+    <div class="row row-cols-lg-4 row-cols-md-3 row-cols-sm-1 mt-3">
   <% for (let listing of allListings) { %>
     
     <div class="card listing-card h-100 col mb-4">
