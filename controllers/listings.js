@@ -1,4 +1,7 @@
 const Listing = require("../models/listing");
+const mbxGeocoding = require('@mapbox/mapbox-sdk/services/geocoding');
+const mapToken= process.env.MAP_TOKEN;
+const geocodingClient = mbxGeocoding({ accessToken: mapToken });
 
 module.exports.index = async (req,res)=>{
    const allListings= await Listing.find({});
@@ -25,24 +28,31 @@ if(!listing){
 
 }
 
-module.exports.createListing = async (req,res,next)=>{  
-    let url = req.file.path;
-    let filename = req.file.filename;
-      const newListing = new Listing(req.body.listing);  
-      newListing.owner = req.user._id;
-      if (typeof req.file !== "undefined") {
-        let url ="/uploads/" + req.file.path; 
-        let filename = req.file.filename;
-        
-       
+module.exports.createListing = async (req, res, next) => {  
+    // 1. Get geocoding data
+    let response = await geocodingClient.forwardGeocode({
+        query: req.body.listing.location,
+        limit: 1
+    }).send();
+    
+    // Create the listing instance using the text body data
+    const newListing = new Listing(req.body.listing);  
+    
+   
+   
+  
+    if (typeof req.file !== "undefined") {
+        let url = req.file.path;        // This is the direct Cloudinary URL
+        let filename = req.file.filename; // This is the Cloudinary public ID
         newListing.image = { url: url, filename: filename };
-    }
-    newListing.image = {url,filename};
+    } 
+    
+    newListing.owner = req.user._id;
+    newListing.geometry = response.body.features[0].geometry;
     await newListing.save();
     req.flash("success", "New Listing Created!");
     res.redirect("/listings");
-    
-}
+};
 
 module.exports.updateLisitng = async(req,res)=>{
     if(!req.body.listing){

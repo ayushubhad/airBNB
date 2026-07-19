@@ -19,7 +19,7 @@ router.route("/")
 
 router.route("/:id")
 .get( wrapAsync(listingController.showListing))
-.put(isLoggedIn,isOwner,upload.single("listing[image][url]"),validateListing,  wrapAsync(listingController.updateLisitng))
+.put(isLoggedIn,isOwner,upload.single("listing[image]"),validateListing,  wrapAsync(listingController.updateLisitng))
 .delete(isLoggedIn,isOwner, wrapAsync(listingController.deletelisting));
 
 

@@ -6,10 +6,16 @@ const listingSchema= new Schema({
         required:true
     },
     description: String,
+    
     image: {
-        url: String,
-        filename :String,
-    } ,
+    url: {
+        type: String,
+        default: "https://images.unsplash.com/photo-1625505826533-5c80aca7d157?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fGdvYXxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=800&q=60",
+        // The setter catches empty strings that slip past the default
+        set: (v) => v === "" ? "https://images.unsplash.com/photo-1625505826533-5c80aca7d157?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fGdvYXxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=800&q=60" : v
+    },
+    filename: String
+} ,
     price: Number,
     location:String,
     country: String,
@@ -21,8 +27,18 @@ const listingSchema= new Schema({
     owner :{
         type: Schema.Types.ObjectId,
         ref: "User",
-
+      
     },
+    geometry :{
+        type:{
+            type: String,
+        enum: ["Point"],
+        required : true,
+    }, 
+    coordinates: {
+        type : [Number],
+        required:true,
+    }}
 });
     listingSchema.post("findOneAndDelete", async (listing)=> {
     if(listing)
