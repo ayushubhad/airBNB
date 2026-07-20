@@ -10,7 +10,8 @@ const listingSchema = Joi.object({
         // Update this line to expect an object with a url string
         image: Joi.object({
             url: Joi.string().allow("", null)
-        })
+        }),
+        category: Joi.string().valid("Trending", "Rooms", "Iconic Cities", "Mountains", "Castles", "Pools", "Camping", "Farms", "Arctic","Beach", "Vineyards", "Kitchen", "GameHub", "Nature", "Business", "Vacation", "Music").required()
     }).required()
 });
 
